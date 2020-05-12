@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(autosvg)
+project(autosvg-wasm)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -13,7 +13,7 @@ include_directories(src/cpp)
 include_directories("${opencv_base_dir}/include")
 include_directories("${opencv_base_dir}/build_wasm")
 
-add_executable(autosvg ${autosvg-wasm-executable})
+add_executable(autosvg-wasm ${autosvg-wasm-executable})
 
 file(GLOB opencv_libs_wasm "${opencv_base_dir}/build_wasm/lib/*.a")
 target_link_libraries(autosvg-wasm ${opencv_libs_wasm})

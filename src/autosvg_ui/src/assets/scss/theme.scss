@@ -1,0 +1,21 @@
+@import "~@getbase/base/scss/_mixins";
+@import "~@getbase/base/scss/core";
+
+/* Import Base Common */
+@import "~@getbase/base/scss/code";
+@import "~@getbase/base/scss/typography";
+@import "~@getbase/base/scss/headings";
+
+// Add Additional Modules
+@import "~@getbase/base/scss/containers";
+@import "~@getbase/base/scss/grid";
+@import "~@getbase/base/scss/horizontal-spacers";
+@import "~@getbase/base/scss/vertical-spacers";
+@import "~@getbase/base/scss/spacers";
+@import "~@getbase/base/scss/typography-helpers";
+@import "~@getbase/base/scss/display-helpers";
+@import "~@getbase/base/scss/flex-helpers";
+@import "~@getbase/base/scss/position-helpers";
+
+
+@import "variables.scss";

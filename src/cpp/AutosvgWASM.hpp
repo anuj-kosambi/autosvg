@@ -15,11 +15,19 @@ namespace pi {
     class AutosvgWASM {
     private:
         cv::Mat *img;
+        unsigned int *imagePixels;
     public:
         void loadImage(uintptr_t buffer, int rows, int cols);
+
         std::string convertToSvg();
     };
 }
 
+EMSCRIPTEN_BINDINGS() {
+    emscripten::class_<pi::AutosvgWASM>("AutosvgWASM")
+            .constructor()
+            .function("loadImage", &pi::AutosvgWASM::loadImage)
+            .function("convertToSvg", &pi::AutosvgWASM::convertToSvg);
+}
 
 #endif //AUTOSVG_AUTOSVG_HPP

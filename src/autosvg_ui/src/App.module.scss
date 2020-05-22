@@ -1,0 +1,22 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  padding: 2rem;
+  :first-child {
+    flex: 1;
+  }
+}
+
+.card {
+  margin: 1rem;
+  position: relative;
+}
+
+.image {
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 80px);
+  object-fit: contain;
+  position: absolute;
+}

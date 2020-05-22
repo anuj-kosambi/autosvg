@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="autosvg-wasm"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\usr\local\lib\cmake\;CMake Files\..\..\..\..\usr\local\lib\cmake\Boost-1.72.0\;CMake Files\..\..\..\..\usr\local\lib\cmake\boost_headers-1.72.0\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/anujkosambi/stuff/autosvg"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/anujkosambi/stuff/autosvg"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/anujkosambi/stuff/autosvg"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="autosvg-wasm">
+				<Option output="/Users/anujkosambi/stuff/autosvg/autosvg-wasm" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/anujkosambi/stuff/autosvg"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Users/anujkosambi/packages/NumCpp/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/calib3d/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/core/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/dnn/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/features2d/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/flann/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/gapi/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/highgui/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/imgcodecs/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/imgproc/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/ml/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/objdetect/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/photo/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/stitching/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/ts/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/video/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/videoio/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/world/include"/>
+					<Add directory="/Users/anujkosambi/stuff/autosvg/src/cpp"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/build_wasm"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 autosvg-wasm"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="autosvg-wasm/fast">
+				<Option output="/Users/anujkosambi/stuff/autosvg/autosvg-wasm" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/anujkosambi/stuff/autosvg"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Users/anujkosambi/packages/NumCpp/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/calib3d/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/core/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/dnn/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/features2d/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/flann/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/gapi/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/highgui/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/imgcodecs/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/imgproc/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/ml/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/objdetect/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/photo/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/stitching/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/ts/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/video/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/videoio/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/modules/world/include"/>
+					<Add directory="/Users/anujkosambi/stuff/autosvg/src/cpp"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/include"/>
+					<Add directory="/Users/anujkosambi/packages/opencv/build_wasm"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 autosvg-wasm/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/anujkosambi/stuff/autosvg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/AutosvgWASM.cpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/AutosvgWASM.hpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/core/Operations.cpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/core/Operations.hpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/utils/CurveUtils.cpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/src/cpp/utils/CurveUtils.hpp">
+			<Option target="autosvg-wasm"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/../../../../usr/local/lib/cmake/Boost-1.72.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\Boost-1.72.0\"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/../../../../usr/local/lib/cmake/Boost-1.72.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\Boost-1.72.0\"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/../../../../usr/local/lib/cmake/boost_headers-1.72.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\boost_headers-1.72.0\"/>
+		</Unit>
+		<Unit filename="/Users/anujkosambi/stuff/autosvg/../../../../usr/local/lib/cmake/boost_headers-1.72.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\cmake\boost_headers-1.72.0\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

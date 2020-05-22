@@ -8,20 +8,18 @@
 
 using namespace std;
 
-#define SHARPNESS 4
-
 void join(const vector<string> &v, char c, string &s) {
     s.clear();
     for (auto p = v.begin();
          p != v.end(); ++p) {
         s += *p;
-        if (p != v.end() - 1)
+        if (p != v.end() - 1 && c != NULL)
             s += c;
     }
 }
 
 
-typedef nc::uint8 PixelType;
+typedef nc::int8 PixelType;
 
 namespace pi {
     class HTMLTag {
@@ -30,11 +28,11 @@ namespace pi {
         vector<SVGParam> params;
 
         string serializeParameters(const vector<SVGParam> &params) {
-            return underscore::reduce(params, [](string accum, SVGParam param) -> string {
-                std::stringstream stream;
-                stream << accum << " " << param.key << "=\"" << param.value << "\" ";
-                return stream.str();
-            }, (string) "");
+            string output;
+            for (auto param: params) {
+                join({output, " ", param.key, "=\"", param.value, "\""}, NULL, output);
+            }
+            return output;
         }
 
     public:
@@ -42,22 +40,22 @@ namespace pi {
 
         HTMLTag(const char *tagName, const vector<SVGParam> &params) {
             this->tagName = tagName;
-            this->params = params;
+            for (auto param : params) {
+                this->params.emplace_back(param);
+            }
         }
 
         string serialize() {
-            std::stringstream stream;
-            stream << "<" << this->tagName << " " << this->serializeParameters(this->params);
+            string output;
+            join({"<", this->tagName, " ", this->serializeParameters(this->params)}, NULL, output);
 
             if (this->children.empty()) {
-                stream << " />";
-                return stream.str();
+                join({output, " />"}, NULL, output);
+                return output;
             }
 
-            stream << " >";
-            stream << this->children;
-            stream << "</" << this->tagName << ">";
-            return stream.str();
+            join({output, " >", this->children, "</", this->tagName, ">"}, NULL, output);
+            return output;
         }
     };
 
@@ -83,7 +81,7 @@ namespace pi {
             }
             for (int i = 0; i < n; i++) {
                 for (int j = i + 1; j < n; j++) {
-                    int sign = (i + j) % 2 == 0 ? -1 : 1;
+                    int sign = (i + j) % 2 == 1 ? -1 : 1;
                     auto value = BezierApproximation::nCr(j, i) * M.at(j, j);
                     M.at(j, i) = (dtype) (sign * value);
                 }
@@ -91,9 +89,8 @@ namespace pi {
             return M;
         }
 
-
         static nc::NdArray<double> distanceMatrixS(const nc::NdArray<double> &points) {
-            auto length = (nc::uint16) points.size();
+            auto length = (nc::uint16) points.shape().rows;
             auto S = nc::zeros<double>(length, 1);
             for (int i = 1; i < length; i++) {
                 auto p1X = points.at(i, 0);
@@ -102,8 +99,10 @@ namespace pi {
                 auto p2Y = points.at(i - 1, 1);
                 S.at(i) = S.at(i - 1) + sqrt(pow((p1X - p2X) * 1.0, 2) + pow((p1Y - p2Y) * 1.0, 2));
             }
-            auto perimeter = S.at(-1);
-            S = S / perimeter;
+            auto perimeter = S.at(length - 1);
+            for (int i = 1; i < length; i++) {
+                S.at(i) /= perimeter;
+            }
             return S;
         }
 
@@ -121,9 +120,7 @@ namespace pi {
     public:
         static CurveSegment fit(const Contour &contour, unsigned short n) {
             auto length = (nc::uint16) contour.size();
-            auto A = nc::zeros<double>(n, 2);
             auto P = nc::zeros<double>(length, 2);
-
             for (int i = 0; i < length; i++) {
                 P.at(i, 0) = (double) contour[i].x;
                 P.at(i, 1) = (double) contour[i].y;
@@ -131,19 +128,18 @@ namespace pi {
             if (n < 3) {
                 return BezierApproximation::convertCurveSegment(P);
             }
-            for (int i = 0; i < 2; i++) {
-                auto M = BezierApproximation::baseMatrixM<double>(n);
-                auto S = BezierApproximation::distanceMatrixS(P);
-                auto T = nc::ones<double>(length, n);
-                T(T.rSlice(), 1) = S.reshape(length);
-                for (int j = 2; j < n; j++) {
-                    T(T.rSlice(), j) = nc::power(T(T.rSlice(), 1), j);
+            auto M = BezierApproximation::baseMatrixM<double>(n);
+            auto S = BezierApproximation::distanceMatrixS(P);
+            auto T = nc::ones<double>(length, n);
+            for (int x = 0; x < T.shape().rows; x++) {
+                for (int y = 1; y < n; y++) {
+                    T.at(x, y) = pow(S.at(x), y);
                 }
-                auto Tt = T.transpose();
-                auto M1 = nc::linalg::inv<double>(M);
-                auto temp = nc::linalg::inv(Tt.dot(T));
-                A(A.rSlice(), i) = nc::linalg::multi_dot<double>({M1, temp, Tt, P}).reshape(n);
             }
+            auto Tt = T.transpose();
+            auto M1 = nc::linalg::inv<double>(M);
+            auto temp = nc::linalg::inv(Tt.dot(T));
+            auto A = nc::linalg::multi_dot<double>({M1, temp, Tt, P});
             return BezierApproximation::convertCurveSegment(A);
         }
     };
@@ -155,11 +151,23 @@ namespace pi {
     string CurveUtils::createSvgFromBezierCurves(const vector<Curve> &curves, const vector<Pixel> &colors,
                                                  const vector<SVGParam> &params) {
         HTMLTag svgTag("svg", params);
-        join(underscore::map<vector<string>>(curves, [](const Curve &curve) -> string {
+        struct count {
+            int i = 0;
+        };
+        count counter;
+        join(underscore::map<vector<string>>(curves, [&counter, &colors](const Curve &curve) -> string {
+            auto i = counter.i;
+            string color;
+            join({"rgb(", to_string(int(colors[i].x)),
+                  ",", to_string(int(colors[i].x)),
+                  ",", to_string(int(colors[i].z)), ")"},
+                 NULL, color);
             HTMLTag pathTag("path", {
-                    {"d",                 CurveUtils::convertCurveIntoSvgPathData(curve).c_str()},
-                    {"data-curve-length", to_string(curve.size()).c_str()}
+                    {"d",    CurveUtils::convertCurveIntoSvgPathData(curve)},
+                    {"fill", color}
             });
+
+            counter.i = counter.i + 1;
             return pathTag.serialize();
         }), '\n', svgTag.children);
         return svgTag.serialize();
@@ -167,14 +175,33 @@ namespace pi {
 
     string CurveUtils::convertCurveIntoSvgPathData(const Curve &curve) {
         return underscore::reduce(curve, [](string accum, const CurveSegment segment) -> string {
-            auto lineString = underscore::reduce(segment, [](string line, cv::Point point) -> string {
-                char command = line.empty() ? 'M' : 'L';
-                std::stringstream data;
-                data << line << " " << command << " " << (point.x) << " " << (point.y);
-                return data.str();
-            }, (string) "");
+            string command = accum.empty() ? " M " : " L ";
+            const auto isLine = segment.size() < 4;
+
+            auto lineString = underscore::reduce(segment,
+                                                 [&isLine, &command, &segment](string line, cv::Point point) -> string {
+                                                     string data;
+                                                     if (isLine || line.empty()) {
+                                                         join({data, line, command,
+                                                               to_string(point.x), " ", to_string(point.y)}, NULL,
+                                                              data);
+                                                     } else if (!isLine && segment[1].x == point.x &&
+                                                                segment[1].y == point.y) {
+                                                         join({data, line, " C ",
+                                                               to_string(point.x), " ", to_string(point.y)}, NULL,
+                                                              data);
+                                                     } else {
+                                                         join({data, line, ", ",
+                                                               to_string(point.x), ", ", to_string(point.y)}, NULL,
+                                                              data);
+                                                     }
+                                                     return data;
+                                                 }, (string) "");
+
             string result;
+
             join({accum, lineString}, '\n', result);
+
             return result;
         }, (string) "");
     }
@@ -182,7 +209,7 @@ namespace pi {
     Curve CurveUtils::fitContourToCurve(const Contour &contour) {
         Contour approxCurve;
         auto archLength = cv::arcLength(contour, true);
-        int max_clamp = int(0.001 * archLength * (48 / SHARPNESS));
+        auto max_clamp = int(0.001 * archLength * (48 / SHARPNESS));
         auto epsilon = min(max(max_clamp, 1), 10);
         cv::approxPolyDP(contour, approxCurve, epsilon, true);
 
@@ -192,7 +219,6 @@ namespace pi {
         int previous_point_index = 0;
 
         Contour partition;
-
         for (int i = 0; i < contour.size(); i++) {
             auto p1 = contour[i];
             if (partition.empty()) {
@@ -210,7 +236,6 @@ namespace pi {
             if (
                     current_point_index != previous_point_index or
                     (partition.size() > 1 and i == contour.size() - 1)) {
-                unsigned short n = min((unsigned short) 4, (unsigned short) partition.size());
                 auto C = CurveUtils::fitPointsToCurveSegment(partition);
                 current_point_index = 0;
                 previous_point_index = current_point_index;
@@ -224,6 +249,7 @@ namespace pi {
     }
 
     CurveSegment CurveUtils::fitPointsToCurveSegment(const Contour &contour) {
-        return BezierApproximation::fit(contour, 4);
+        unsigned short n = min((unsigned short) 4, (unsigned short) contour.size());
+        return BezierApproximation::fit(contour, n);
     }
 }

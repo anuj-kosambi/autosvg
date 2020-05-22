@@ -5,6 +5,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <utils/underscore.hpp>
+#include <NumCpp.hpp>
 
 #include "Operations.hpp"
 
@@ -44,7 +45,7 @@ namespace pi {
     }
 
     SegmentedEdgeResult Operations::findColorSegmentedEdge(cv::Mat *src, cv::Mat *out, unsigned int k) {
-        cv::Mat *kMean = new cv::Mat;
+        auto *kMean = new cv::Mat;
 
         cv::Mat edge(src->rows, src->cols, CV_8UC1, cv::Scalar(0, 0, 0));
 
@@ -81,5 +82,17 @@ namespace pi {
         *out = edge;
 
         return *result;
+    }
+
+    std::vector<Pixel> Operations::findContourAvgColor(const cv::Mat &src, const std::vector<Contour> &contours) {
+
+        return underscore::map<std::vector<Pixel>>(contours, [&src](Contour contour) -> Pixel {
+            cv::Mat mask(src.rows, src.cols, CV_8UC1, cv::Scalar(0, 0, 0));
+            auto *edges = new vector<Contour>();
+            edges->push_back(contour);
+            cv::drawContours(mask, *edges, -1, cv::Scalar(255), -1);
+            cv::Scalar color = cv::mean(src, mask = mask);
+            return {float(color[0]), float(color[1]), float(color[2])};
+        });
     }
 }

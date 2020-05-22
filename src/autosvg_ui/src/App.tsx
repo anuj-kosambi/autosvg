@@ -61,6 +61,7 @@ function App() {
         inst.loadImage(dataOnHeap.byteOffset, rows, cols);
 
         const svg = inst.convertToSvg();
+        console.log(svg);
         const blob = new Blob([cleanString(svg)], {
             type: 'image/svg+xml'
         });

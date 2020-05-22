@@ -16,8 +16,11 @@ typedef std::vector<CurveSegment> Curve;
 
 struct SVGParam {
     const char *key;
-    const char *value;
+    std::string value;
 };
+
+#define SHARPNESS 12
+#define K_COLORS 3
 
 struct SegmentedEdgeResult {
     std::vector<Contour> edges;

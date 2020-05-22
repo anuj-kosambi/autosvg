@@ -19,6 +19,8 @@ namespace pi {
         SegmentedEdgeResult static findColorSegmentedEdge(cv::Mat *src, cv::Mat *out, unsigned int k);
 
         void static sharpen(cv::Mat *src, cv::Mat *out, unsigned int k = 5);
+
+        std::vector<Pixel> static findContourAvgColor(const cv::Mat &src, const std::vector<Contour> &contours);
     };
 
 }

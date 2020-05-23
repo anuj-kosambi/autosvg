@@ -132,5 +132,5 @@ CTestTestfile.cmake
 _deps
 
 /android/**/.cxx
-autosvg-wasm.js
-autosvg-wasm.wasm
+/autosvg-wasm.js
+/autosvg-wasm.wasm

@@ -64,11 +64,13 @@ function App() {
         if (ctx == null) {
             return;
         }
+
         await new Promise((resolve) => {
             dummyImg.onload = () => {
-                canvas.width = dummyImg.width;
-                canvas.height = dummyImg.height;
-                ctx.drawImage(dummyImg, 0, 0);
+                const widthHeightRatio = dummyImg.width * 1.0 / dummyImg.height;
+                canvas.width = 600.0 * widthHeightRatio;
+                canvas.height = 600.0;
+                ctx.drawImage(dummyImg, 0, 0, canvas.width, canvas.height);
                 resolve();
             };
             dummyImg.src = imageURL;
@@ -111,9 +113,9 @@ function App() {
                     </Label>
                     <Slider
                         min={2}
-                        max={12}
+                        max={6}
                         stepSize={1}
-                        labelStepSize={2}
+                        labelStepSize={1}
                         onChange={handleKColorChange}
                         value={kColor}
                     />

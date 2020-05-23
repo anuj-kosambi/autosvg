@@ -19,7 +19,7 @@ namespace pi {
     public:
         void loadImage(uintptr_t buffer, int rows, int cols);
 
-        std::string convertToSvg();
+        std::string convertToSvg(int k_colors, int sharpness);
     };
 }
 

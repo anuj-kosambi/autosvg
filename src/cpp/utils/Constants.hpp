@@ -19,7 +19,7 @@ struct SVGParam {
     std::string value;
 };
 
-#define SHARPNESS 12
+#define SHARPNESS 4
 #define K_COLORS 3
 
 struct SegmentedEdgeResult {

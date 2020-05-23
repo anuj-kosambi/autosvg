@@ -16,7 +16,7 @@ namespace pi {
 
     class CurveUtils {
     public:
-        static vector<Curve> convertContoursToBezierCurves(const vector<Contour> &contours);
+        static vector<Curve> convertContoursToBezierCurves(const vector<Contour> &contours, int sharpness);
 
         static string createSvgFromBezierCurves(const vector<Curve> &curves, const vector<Pixel> &colors,
                                                 const vector<SVGParam> &params);
@@ -24,7 +24,7 @@ namespace pi {
     private:
         static string convertCurveIntoSvgPathData(const Curve &curves);
 
-        static Curve fitContourToCurve(const Contour &contour);
+        static Curve fitContourToCurve(const Contour &contour, int sharpness = SHARPNESS);
 
         static CurveSegment fitPointsToCurveSegment(const Contour &contourPart);
     };

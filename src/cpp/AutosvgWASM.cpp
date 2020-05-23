@@ -25,15 +25,15 @@ namespace pi {
         }
     }
 
-    string AutosvgWASM::convertToSvg() {
+    string AutosvgWASM::convertToSvg(int kColors, int sharpness) {
         auto orig = new cv::Mat(img->rows, img->cols, CV_8UC4, imagePixels);
         cv::cvtColor(*orig, *orig, COLOR_RGBA2RGB);
 
-        SegmentedEdgeResult result = Operations::findColorSegmentedEdge(img, img, K_COLORS);
+        SegmentedEdgeResult result = Operations::findColorSegmentedEdge(img, img, kColors);
 
         const vector<Pixel> dominantColors = result.colors;
         const vector<Contour> edges = result.edges;
-        vector<Curve> curve = CurveUtils::convertContoursToBezierCurves(edges);
+        vector<Curve> curve = CurveUtils::convertContoursToBezierCurves(edges, sharpness);
 
         const vector<SVGParam> params = {
                 {"width",  to_string(img->cols).c_str()},
@@ -41,7 +41,6 @@ namespace pi {
                 {"xmlns",  "http://www.w3.org/2000/svg"}
         };
         const vector<Pixel> colors = Operations::findContourAvgColor(*orig, edges);
-        cout<<colors<<endl;
         string svg = CurveUtils::createSvgFromBezierCurves(curve, colors, params);
         cv::cvtColor(*img, *img, COLOR_RGB2RGBA);
         memcpy(imagePixels, img->data, img->rows * img->cols * sizeof(int));

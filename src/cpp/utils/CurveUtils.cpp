@@ -144,8 +144,11 @@ namespace pi {
         }
     };
 
-    vector<Curve> CurveUtils::convertContoursToBezierCurves(const vector<Contour> &contours) {
-        return underscore::map<vector<Curve>>(contours, CurveUtils::fitContourToCurve);
+    vector<Curve>
+    CurveUtils::convertContoursToBezierCurves(const vector<Contour> &contours, int sharpness) {
+        return underscore::map<vector<Curve>>(contours, [sharpness](Contour contour) -> Curve {
+            return CurveUtils::fitContourToCurve(contour, sharpness);
+        });
     }
 
     string CurveUtils::createSvgFromBezierCurves(const vector<Curve> &curves, const vector<Pixel> &colors,
@@ -206,7 +209,7 @@ namespace pi {
         }, (string) "");
     }
 
-    Curve CurveUtils::fitContourToCurve(const Contour &contour) {
+    Curve CurveUtils::fitContourToCurve(const Contour &contour, int sharpness) {
         Contour approxCurve;
         auto archLength = cv::arcLength(contour, true);
         auto max_clamp = int(0.001 * archLength * (48 / SHARPNESS));

@@ -83,6 +83,11 @@ function App() {
             0,
             0
         );*/
+        const a = document.createElement('a');
+        a.setAttribute('download', 'output.svg');
+        a.setAttribute('href', blobUrl);
+        a.click();
+
         const output = new Image();
 
         await new Promise((resolve) => {

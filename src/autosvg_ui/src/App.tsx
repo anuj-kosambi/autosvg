@@ -51,7 +51,7 @@ function App() {
     const [image, changeImage] = React.useState();
     const [svgBlob, changeBlobUrl] = React.useState();
     const [kColor, handleKColorChange] = React.useState(2);
-    const [sharpness, handleSharpnessChange] = React.useState(4);
+    const [sharpness, handleSharpnessChange] = React.useState(5);
     const [memCanvas] = React.useState(document.createElement("canvas"));
 
     async function onFileChange(event: FormEvent<HTMLInputElement>) {
@@ -120,13 +120,13 @@ function App() {
                         value={kColor}
                     />
                     <Label>
-                        Sharpness
+                        Smoothness
                     </Label>
                     <Slider
-                        min={4}
-                        max={48}
+                        min={1}
+                        max={20}
                         stepSize={1}
-                        labelStepSize={12}
+                        labelStepSize={1}
                         onChange={handleSharpnessChange}
                         value={sharpness}
                     />

@@ -41,6 +41,7 @@ namespace pi {
                 {"xmlns",  "http://www.w3.org/2000/svg"}
         };
         const vector<Pixel> colors = Operations::findContourAvgColor(*orig, edges);
+        cout<<colors<<endl;
         string svg = CurveUtils::createSvgFromBezierCurves(curve, colors, params);
         cv::cvtColor(*img, *img, COLOR_RGB2RGBA);
         memcpy(imagePixels, img->data, img->rows * img->cols * sizeof(int));

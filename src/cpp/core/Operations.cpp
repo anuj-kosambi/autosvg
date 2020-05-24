@@ -21,11 +21,10 @@ namespace pi {
         cv::kmeans(data,
                    k,
                    labels,
-                   cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::COUNT, 100, 0.2),
+                   cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 100, 1),
                    10,
-                   cv::KMEANS_RANDOM_CENTERS,
+                   cv::KMEANS_PP_CENTERS,
                    colors);
-
         for (unsigned int i = 0; i < src->rows * src->cols; i++) {
             data.at<float>(i, 0) = colors(labels[i], 0);
             data.at<float>(i, 1) = colors(labels[i], 1);

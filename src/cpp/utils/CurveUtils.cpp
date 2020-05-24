@@ -162,7 +162,7 @@ namespace pi {
             auto i = counter.i;
             string color;
             join({"rgb(", to_string(int(colors[i].x)),
-                  ",", to_string(int(colors[i].x)),
+                  ",", to_string(int(colors[i].y)),
                   ",", to_string(int(colors[i].z)), ")"},
                  NULL, color);
             HTMLTag pathTag("path", {
@@ -211,10 +211,7 @@ namespace pi {
 
     Curve CurveUtils::fitContourToCurve(const Contour &contour, int sharpness) {
         Contour approxCurve;
-        auto archLength = cv::arcLength(contour, true);
-        auto max_clamp = int(0.001 * archLength * (48 / SHARPNESS));
-        auto epsilon = min(max(max_clamp, 1), 10);
-        cv::approxPolyDP(contour, approxCurve, epsilon, true);
+        cv::approxPolyDP(contour, approxCurve, sharpness, true);
 
         Curve output;
 

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Auto Svg",
+  "name": "Auto Svg",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,9 +8,14 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo512.png",
+      "src": "favicon-16x16.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "16x16"
+    },
+    {
+      "src": "favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
     }
   ],
   "start_url": ".",

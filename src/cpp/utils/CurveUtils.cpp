@@ -177,32 +177,34 @@ namespace pi {
     }
 
     string CurveUtils::convertCurveIntoSvgPathData(const Curve &curve) {
-        return underscore::reduce(curve, [](string accum, const CurveSegment segment) -> string {
+        unsigned long lastSegmentSize = 0;
+        return underscore::reduce(curve, [&lastSegmentSize](string accum, const CurveSegment segment) -> string {
             string command = accum.empty() ? " M " : " L ";
             const auto isLine = segment.size() < 4;
-
+            auto index = 0;
             auto lineString = underscore::reduce(segment,
-                                                 [&isLine, &command, &segment](string line, cv::Point point) -> string {
+                                                 [&isLine, &command, &lastSegmentSize, &index](string line,
+                                                                                               cv::Point point) -> string {
                                                      string data;
-                                                     if (isLine || line.empty()) {
+                                                     if ((index == 0 && lastSegmentSize != 4) || isLine) {
                                                          join({data, line, command,
                                                                to_string(point.x), " ", to_string(point.y)}, NULL,
                                                               data);
-                                                     } else if (!isLine && segment[1].x == point.x &&
-                                                                segment[1].y == point.y) {
+                                                     } else if (!isLine && index == 1) {
                                                          join({data, line, " C ",
                                                                to_string(point.x), " ", to_string(point.y)}, NULL,
                                                               data);
-                                                     } else {
+                                                     } else if (!isLine && index > 1) {
                                                          join({data, line, ", ",
                                                                to_string(point.x), ", ", to_string(point.y)}, NULL,
                                                               data);
                                                      }
+                                                     index++;
                                                      return data;
                                                  }, (string) "");
 
             string result;
-
+            lastSegmentSize = segment.size();
             join({accum, lineString}, '\n', result);
 
             return result;

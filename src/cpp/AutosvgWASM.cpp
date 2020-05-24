@@ -17,7 +17,7 @@ namespace pi {
             imagePixels = reinterpret_cast<unsigned int *>(buffer);
             img = new cv::Mat(rows, cols, CV_8UC4, imagePixels);
 
-            Operations::sharpen(img, img);
+//            Operations::sharpen(img, img);
 
             cv::cvtColor(*img, *img, COLOR_RGBA2RGB);
         } catch (const char *message) {
@@ -41,7 +41,6 @@ namespace pi {
                 {"xmlns",  "http://www.w3.org/2000/svg"}
         };
         const vector<Pixel> colors = Operations::findContourAvgColor(*orig, edges);
-        cout<<colors<<endl;
         string svg = CurveUtils::createSvgFromBezierCurves(curve, colors, params);
         cv::cvtColor(*img, *img, COLOR_RGB2RGBA);
         memcpy(imagePixels, img->data, img->rows * img->cols * sizeof(int));

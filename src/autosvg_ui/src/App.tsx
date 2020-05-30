@@ -4,9 +4,9 @@ import {Button, ButtonGroup, Card, Classes, Elevation, FileInput, Label, Slider}
 
 import s from "./App.module.scss";
 
-function downloadBlobUrl(blobUrl: string) {
+function downloadBlobUrl(blobUrl: string, downloadFileName: string) {
     const a = document.createElement('a');
-    a.setAttribute('download', 'output.svg');
+    a.setAttribute('download', downloadFileName);
     a.setAttribute('href', blobUrl);
     a.click();
 }
@@ -53,10 +53,13 @@ function App() {
     const [kColor, handleKColorChange] = React.useState(2);
     const [sharpness, handleSharpnessChange] = React.useState(5);
     const [memCanvas] = React.useState(document.createElement("canvas"));
+    const [currentFileName, changeCurrentFileName] = React.useState();
+    const [downloadFileName, changeDownloadFileName] = React.useState('output.svg');
 
     async function onFileChange(event: FormEvent<HTMLInputElement>) {
         // @ts-ignore
         const [file] = event.target.files;
+        const fileName = file.name.split('.')[0];
         const canvas = memCanvas;
         const imageURL = URL.createObjectURL(file);
         const dummyImg = new Image();
@@ -76,15 +79,17 @@ function App() {
             dummyImg.src = imageURL;
         });
         changeImage(imageURL);
+        changeCurrentFileName(fileName);
     }
 
     function handleConvert() {
         const blobUrl = convertImageToSvg(memCanvas, kColor, sharpness);
         changeBlobUrl(blobUrl);
+        changeDownloadFileName(`${currentFileName}.svg`);
     }
 
     function handleDownload() {
-        downloadBlobUrl(svgBlob);
+        downloadBlobUrl(svgBlob, downloadFileName);
     }
 
     return (

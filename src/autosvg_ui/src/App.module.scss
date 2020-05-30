@@ -19,3 +19,10 @@
   object-fit: contain;
   position: absolute;
 }
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  border: "2px dashed";
+  border-radius: "10px";
+}

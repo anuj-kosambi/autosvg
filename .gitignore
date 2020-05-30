@@ -134,3 +134,4 @@ _deps
 /android/**/.cxx
 /autosvg-wasm.js
 /autosvg-wasm.wasm
+/autosvg-wasm.cbp

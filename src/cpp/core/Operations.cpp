@@ -83,15 +83,12 @@ namespace pi {
         return *result;
     }
 
-    std::vector<Pixel> Operations::findContourAvgColor(const cv::Mat &src, const std::vector<Contour> &contours) {
-
-        return underscore::map<std::vector<Pixel>>(contours, [&src](Contour contour) -> Pixel {
-            cv::Mat mask(src.rows, src.cols, CV_8UC1, cv::Scalar(0, 0, 0));
-            auto *edges = new vector<Contour>();
-            edges->push_back(contour);
-            cv::drawContours(mask, *edges, -1, cv::Scalar(255), -1);
-            cv::Scalar color = cv::mean(src, mask = mask);
-            return {float(color[0]), float(color[1]), float(color[2])};
-        });
+    Pixel Operations::findContourAvgColor(const cv::Mat &src, const Contour &contour) {
+        cv::Mat mask(src.rows, src.cols, CV_8UC1, cv::Scalar(0, 0, 0));
+        auto *edges = new vector<Contour>();
+        edges->push_back(contour);
+        cv::drawContours(mask, *edges, -1, cv::Scalar(255), -1);
+        cv::Scalar color = cv::mean(src, mask = mask);
+        return {float(color[0]), float(color[1]), float(color[2])};
     }
 }

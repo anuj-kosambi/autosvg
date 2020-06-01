@@ -145,32 +145,44 @@ namespace pi {
     };
 
     vector<Curve>
-    CurveUtils::convertContoursToBezierCurves(const vector<Contour> &contours, int sharpness) {
-        return underscore::map<vector<Curve>>(contours, [sharpness](Contour contour) -> Curve {
-            return CurveUtils::fitContourToCurve(contour, sharpness);
-        });
+    CurveUtils::convertContoursToBezierCurves(const vector<Contour> &contours, int sharpness,
+                                              const vector<Pixel> &colors) {
+        vector<Curve> output;
+        for (int i = 0; i < contours.size(); i++) {
+            Contour contour = contours[i];
+            Curve curve;
+            curve.segments = CurveUtils::fitContourToCurve(contour, sharpness);
+            curve.area = cv::contourArea(contour);
+            curve.color = colors[i];
+            output.push_back(curve);
+        }
+        return output;
     }
 
-    string CurveUtils::createSvgFromBezierCurves(const vector<Curve> &curves, const vector<Pixel> &colors,
+    string CurveUtils::createSvgFromBezierCurves(const vector<Curve> &curves,
                                                  const vector<SVGParam> &params) {
         HTMLTag svgTag("svg", params);
-        struct count {
-            int i = 0;
-        };
-        count counter;
-        join(underscore::map<vector<string>>(curves, [&counter, &colors](const Curve &curve) -> string {
-            auto i = counter.i;
+
+        vector<Curve> sortedCurves(curves.size());
+
+        partial_sort_copy(
+                curves.begin(), curves.end(),
+                sortedCurves.begin(), sortedCurves.end(),
+                [](const Curve &a, const Curve &b) -> bool {
+                    return a.area > b.area;
+                });
+
+        join(underscore::map<vector<string>>(sortedCurves, [](const Curve &item) -> string {
             string color;
-            join({"rgb(", to_string(int(colors[i].x)),
-                  ",", to_string(int(colors[i].y)),
-                  ",", to_string(int(colors[i].z)), ")"},
+            join({"rgb(", to_string(int(item.color.x)),
+                  ",", to_string(int(item.color.y)),
+                  ",", to_string(int(item.color.z)), ")"},
                  NULL, color);
             HTMLTag pathTag("path", {
-                    {"d",    CurveUtils::convertCurveIntoSvgPathData(curve)},
+                    {"d",    CurveUtils::convertCurveIntoSvgPathData(item)},
                     {"fill", color}
             });
 
-            counter.i = counter.i + 1;
             return pathTag.serialize();
         }), '\n', svgTag.children);
         return svgTag.serialize();
@@ -178,44 +190,50 @@ namespace pi {
 
     string CurveUtils::convertCurveIntoSvgPathData(const Curve &curve) {
         unsigned long lastSegmentSize = 0;
-        return underscore::reduce(curve, [&lastSegmentSize](string accum, const CurveSegment segment) -> string {
-            string command = accum.empty() ? " M " : " L ";
-            const auto isLine = segment.size() < 4;
-            auto index = 0;
-            auto lineString = underscore::reduce(segment,
-                                                 [&isLine, &command, &lastSegmentSize, &index](string line,
-                                                                                               cv::Point point) -> string {
-                                                     string data;
-                                                     if ((index == 0 && lastSegmentSize != 4) || isLine) {
-                                                         join({data, line, command,
-                                                               to_string(point.x), " ", to_string(point.y)}, NULL,
-                                                              data);
-                                                     } else if (!isLine && index == 1) {
-                                                         join({data, line, " C ",
-                                                               to_string(point.x), " ", to_string(point.y)}, NULL,
-                                                              data);
-                                                     } else if (!isLine && index > 1) {
-                                                         join({data, line, ", ",
-                                                               to_string(point.x), ", ", to_string(point.y)}, NULL,
-                                                              data);
-                                                     }
-                                                     index++;
-                                                     return data;
-                                                 }, (string) "");
+        return underscore::reduce(curve.segments,
+                                  [&lastSegmentSize](string accum, const CurveSegment segment) -> string {
+                                      string command = accum.empty() ? " M " : " L ";
+                                      const auto isLine = segment.size() < 4;
+                                      auto index = 0;
+                                      auto lineString = underscore::reduce(segment,
+                                                                           [&isLine, &command, &lastSegmentSize, &index](
+                                                                                   string line,
+                                                                                   cv::Point point) -> string {
+                                                                               string data;
+                                                                               if ((index == 0 &&
+                                                                                    lastSegmentSize != 4) || isLine) {
+                                                                                   join({data, line, command,
+                                                                                         to_string(point.x), " ",
+                                                                                         to_string(point.y)}, NULL,
+                                                                                        data);
+                                                                               } else if (!isLine && index == 1) {
+                                                                                   join({data, line, " C ",
+                                                                                         to_string(point.x), " ",
+                                                                                         to_string(point.y)}, NULL,
+                                                                                        data);
+                                                                               } else if (!isLine && index > 1) {
+                                                                                   join({data, line, ", ",
+                                                                                         to_string(point.x), ", ",
+                                                                                         to_string(point.y)}, NULL,
+                                                                                        data);
+                                                                               }
+                                                                               index++;
+                                                                               return data;
+                                                                           }, (string) "");
 
-            string result;
-            lastSegmentSize = segment.size();
-            join({accum, lineString}, '\n', result);
+                                      string result;
+                                      lastSegmentSize = segment.size();
+                                      join({accum, lineString}, '\n', result);
 
-            return result;
-        }, (string) "");
+                                      return result;
+                                  }, (string) "");
     }
 
-    Curve CurveUtils::fitContourToCurve(const Contour &contour, int sharpness) {
+    vector<CurveSegment> CurveUtils::fitContourToCurve(const Contour &contour, int sharpness) {
         Contour approxCurve;
         cv::approxPolyDP(contour, approxCurve, sharpness, true);
 
-        Curve output;
+        vector<CurveSegment> output;
 
         int current_point_index = 0;
         int previous_point_index = 0;

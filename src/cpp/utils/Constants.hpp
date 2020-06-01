@@ -12,11 +12,16 @@ typedef cv::Point3_<float> Pixel;
 typedef std::vector<cv::Point> Contour;
 typedef cv::Vec4i Hierarchy;
 typedef std::vector<cv::Point> CurveSegment;
-typedef std::vector<CurveSegment> Curve;
 
 struct SVGParam {
     const char *key;
     std::string value;
+};
+
+struct Curve {
+    std::vector<CurveSegment> segments;
+    Pixel color;
+    double area;
 };
 
 #define SHARPNESS 4

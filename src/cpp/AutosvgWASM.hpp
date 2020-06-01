@@ -16,6 +16,7 @@ namespace pi {
     private:
         cv::Mat *img;
         unsigned int *imagePixels;
+        Pixel getContourColor(const Contour& contour);
     public:
         void loadImage(uintptr_t buffer, int rows, int cols);
 

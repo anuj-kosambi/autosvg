@@ -52,6 +52,15 @@ export NUMCPP=<path to numcpp repo>
 - Build Emscripten 
 > https://emscripten.org/docs/getting_started/downloads.html
 
+
+- Build OpenCV WASM
+
+```bash
+cd $OPENCV_SDK
+python ./platforms/js/build_js.py build_wasm --build_wasm
+cd ../..
+```
+
 - Run cmake building script for emscripten tool chain via 
 ```bash
 > cmake -DCMAKE_TOOLCHAIN_FILE=${EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake

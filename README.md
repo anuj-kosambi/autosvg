@@ -12,13 +12,28 @@ You can check your result here (Live Demo)[https://autosvg.now.sh].
 ![Result-1](assets/results/result-1.png)
 #### Logo tracing
 ![Result-2](assets/results/result-2.png)
-### Image tracing
+#### Image tracing
 ![Result-3](assets/results/result-3.png)
 
 ### Building AutoSVG-WASM.js
 
--   Environment Setup 
---  TODO (Adding opencv, emscripten and numcpp into submodules)
+#### Prerequisite
+
+- cmake, boost,  python
+
+- MacOS
+```bash
+> brew install cmake boost
+```
+
+#### Automatic Setup 
+```bash
+> git submodule update --init
+
+> sh build.sh
+```
+
+#### Manual Setup 
 ```bash
 #
 # https://github.com/emscripten-core/emsdk.git
@@ -34,9 +49,12 @@ export OPENCV_SDK=<path to opencv repo>
 export NUMCPP=<path to numcpp repo>
 ``` 
 
+- Build Emscripten 
+> https://emscripten.org/docs/getting_started/downloads.html
+
 - Run cmake building script for emscripten tool chain via 
 ```bash
-> sh build.sh
+> cmake -DCMAKE_TOOLCHAIN_FILE=${EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 ```   
 - Run make command to complile source code and building WASM file.
 ```bash

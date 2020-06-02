@@ -90,9 +90,8 @@ int main(int argc, char **argv) {
     inst.writeImage(inst.outputFileName, svgContent);
 
   } catch(const std::exception& e) {
-      cout<<e.what()<<endl;
-//    std::cout << options.help() << std::endl;
-//    exit(0);
+    std::cout << options.help() << std::endl;
+    exit(0);
   }
   return 0;
 }

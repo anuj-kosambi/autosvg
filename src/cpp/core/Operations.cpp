@@ -62,7 +62,6 @@ namespace pi {
                                   vector<Hierarchy> hierarchy;
 
                                   cv::findContours(mask, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
-
                                   contours = underscore::filter<vector<Contour>>(contours, [imageArea](Contour contour) -> bool {
                                       auto area = cv::contourArea(contour);
                                       return area > MINIMUM_CONTOUR_AREA &&

@@ -12,15 +12,15 @@ set(Boost_INCLUDE_DIR "/usr/local/include")
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.72.0 REQUIRED)
 
-include_directories(${Boost_INCLUDE_DIRS})
 
+include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories($ENV{NUMCPP}/include)
 include_directories(${opencv_include_modules})
-include_directories(src/cpp)
 include_directories("${opencv_base_dir}/include")
 include_directories("${opencv_base_dir}/build_wasm")
 
+include_directories(src/cpp)
 add_executable(autosvg-wasm ${autosvg-wasm-executable})
 
 file(GLOB opencv_libs_wasm "${opencv_base_dir}/build_wasm/lib/*.a")

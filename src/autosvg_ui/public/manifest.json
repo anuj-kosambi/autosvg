@@ -1,6 +1,7 @@
 {
   "short_name": "Auto Svg",
   "name": "Auto Svg",
+  "description": "Autosvg is tracing tool, which can convert image format like (jpg,png,gif) into vector svg.",
   "icons": [
     {
       "src": "favicon.ico",

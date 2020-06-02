@@ -6,6 +6,15 @@
 Autosvg is tracing tool, which can convert image format like (jpg,png,gif) into vector svg.
 You can check your result here (Live Demo)[https://autosvg.now.sh]. 
 
+### Results
+
+#### Clipart tracing
+![Result-1](assets/results/result-1.png)
+#### Logo tracing
+![Result-2](assets/results/result-2.png)
+### Image tracing
+![Result-3](assets/results/result-3.png)
+
 ### Building AutoSVG-WASM.js
 
 -   Environment Setup 

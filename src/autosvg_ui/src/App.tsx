@@ -9,12 +9,15 @@ import {
   FileInput,
   Label,
   Slider,
+  Spinner
 } from "@blueprintjs/core";
 
 import Editor from "./components/Editor";
 import s from "./App.module.scss";
 import _ from "lodash";
 import { SVGJSONType } from "./components/Editor/Editor";
+
+const autosvgWasmWorker = new Worker('./autosvg-wasm-worker.js');
 
 function downloadBlobUrl(blobUrl: string, downloadFileName: string) {
   const a = document.createElement("a");
@@ -103,41 +106,27 @@ function convertImageToSvg(
   kColors: number,
   sharpness: number
 ) {
-  const ctx = canvas.getContext("2d");
-  if (ctx == null) {
-    return;
-  }
-  //@ts-ignore
-  const _Module = Module;
-  const AutosvgWASM = _Module.AutosvgWASM;
+    return new Promise<any>((resolve, reject) => {
+        
+        const ctx = canvas.getContext("2d");
+        if (ctx == null) {
+            reject('Error loading canvas');
+            return;
+        }
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-  const inst = new AutosvgWASM();
+        autosvgWasmWorker.postMessage([imageData, kColors, sharpness]);
 
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const imageDataBuffer = imageData.data.buffer;
-  const rows = canvas.height;
-  const cols = canvas.width;
-  const byteCounts = imageDataBuffer.byteLength;
-  const dataPtr = _Module._malloc(byteCounts);
-  const dataOnHeap = new Uint8ClampedArray(
-    _Module.HEAPU8.buffer,
-    dataPtr,
-    byteCounts
-  );
-  dataOnHeap.set(imageData.data);
-
-  inst.loadImage(dataOnHeap.byteOffset, rows, cols);
-
-  const svg = inst.convertToSvg(kColors, sharpness);
-  const blob = new Blob([svg], {
-    type: "image/svg+xml",
-  });
-  const blobUrl = URL.createObjectURL(blob);
-  _Module._free(dataPtr);
-  return { blobUrl, svg };
+        // @ts-ignore
+        autosvgWasmWorker.addEventListener('message', function(e) {
+            resolve(e.data);
+        });
+    });
 }
 
 function App() {
+
+
   const [image, changeImage] = React.useState();
   const [svgBlob, changeBlobUrl] = React.useState();
   const [kColor, handleKColorChange] = React.useState(2);
@@ -150,6 +139,7 @@ function App() {
   const [downloadFileName, changeDownloadFileName] = React.useState(
     "output.svg"
   );
+  const [isOutputSpinnerVisible, changeOutputSpinnerVisibility] = React.useState(false);
 
   async function onFileChange(event: FormEvent<HTMLInputElement>) {
     // @ts-ignore
@@ -182,13 +172,20 @@ function App() {
   }
 
   function handleConvert() {
-    const result = convertImageToSvg(memCanvas, kColor, sharpness);
-    if (!result) {
-      return;
-    }
-    changeBlobUrl(result.blobUrl);
-    changeSvgContent(convertToJSON(result.svg));
-    changeDownloadFileName(`${currentFileName}.svg`);
+    changeOutputSpinnerVisibility(true);
+    convertImageToSvg(memCanvas, kColor, sharpness)
+    .then(result => {
+        changeOutputSpinnerVisibility(false);
+        if (!result) {
+          return;
+        }
+        changeBlobUrl(result.blobUrl);
+        changeSvgContent(convertToJSON(result.svg));
+        changeDownloadFileName(`${currentFileName}.svg`);
+    })
+    .catch(error => {
+        changeOutputSpinnerVisibility(false);
+    });
   }
 
   function handleDownload() {
@@ -237,7 +234,13 @@ function App() {
           <img src={image} className={cx(s.image)} />
         </Card>
         <Card elevation={Elevation.TWO} className={cx("col-8", s.card)}>
+          <div className={s.loaderWrapper}
+              style={{display: isOutputSpinnerVisible? 'block': 'none'}}>
+              <Spinner size={100} />
+          </div>
+          <div style={{display: !isOutputSpinnerVisible? 'block': 'none'}}>
           <Editor data={svgContent} />
+          </div>
         </Card>
       </div>
       <div className="padding-1rme row container">

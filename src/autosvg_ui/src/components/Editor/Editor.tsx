@@ -8,9 +8,9 @@ export type SVGJSONType = {
   objects: {
     x: number;
     y: number;
-    rotate: number,
-    stroke: string,
-    strokeWidth: number,
+    rotate: number;
+    stroke: string;
+    strokeWidth: number;
     moveX: number;
     moveY: number;
     path: [];
@@ -30,6 +30,7 @@ const Editor: React.ComponentType<{
   console.log(data);
   return (
     <Designer
+      insertMenu={null}
       width={data?.width}
       height={data?.height}
       background={"#444"}

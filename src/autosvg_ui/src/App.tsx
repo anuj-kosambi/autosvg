@@ -29,7 +29,7 @@ function downloadBlobUrl(blobUrl: string, downloadFileName: string) {
 function convertToJSONPath(path: SVGPathElement, index: any) {
   const d = _.reject(path.getAttribute("d")!.split(/\s+|,/), _.isEmpty);
   const startXy = _.take(d, 3);
-  const { value, partition } =   d.splice(3).reduce(
+  const { value, partition } = d.splice(3).reduce(
     // @ts-ignore
     (accum, item) => {
       if (_.isFinite(+item)) {
@@ -81,7 +81,7 @@ function convertToJSONPath(path: SVGPathElement, index: any) {
     y: +startXy[2],
     path: objects,
     rotate: 0,
-    stroke: "black",
+    stroke: path.getAttribute("fill") as string,
     strokeWidth: 1,
     type: "polygon",
     fill: path.getAttribute("fill"),
@@ -227,8 +227,8 @@ function App() {
   }
 
   return (
-    <div className={cx(Classes.DARK, "container", s.mainContainer)}>
-      <div className="row container">
+    <div className={cx(Classes.DARK, s.mainContainer)}>
+      <div className="row">
         <Card elevation={Elevation.TWO} className={cx("col-4", s.card)}>
           <h6>Input Image</h6>
           <img src={image} className={cx(s.image)} />
@@ -243,7 +243,7 @@ function App() {
           </div>
         </Card>
       </div>
-      <div className="padding-1rme row container">
+      <div className="padding-1rem row">
         <div className="col-6-l col-12">
           <h4>Settings</h4>
           <div className="padding-top-1-5rem padding-bottom-1-5rem">

@@ -226,23 +226,26 @@ function App() {
     ev.preventDefault();
   }
 
+  function getEditorBlock() {
+    if (svgContent !== null) {
+      return (
+        <div className={cx("row", "container", s.outputContainer)}>
+            <Card elevation={Elevation.TWO} className={cx("col-12", s.card)}>
+              <div className={s.loaderWrapper}
+                  style={{display: isOutputSpinnerVisible? 'block': 'none'}}>
+                  <Spinner size={100} />
+              </div>
+              <div style={{display: !isOutputSpinnerVisible? 'block': 'none'}}>
+                  <Editor data={svgContent} />
+              </div>
+            </Card>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className={cx(Classes.DARK, "container", s.mainContainer)}>
-      <div className="row container">
-        <Card elevation={Elevation.TWO} className={cx("col-4", s.card)}>
-          <h6>Input Image</h6>
-          <img src={image} className={cx(s.image)} />
-        </Card>
-        <Card elevation={Elevation.TWO} className={cx("col-8", s.card)}>
-          <div className={s.loaderWrapper}
-              style={{display: isOutputSpinnerVisible? 'block': 'none'}}>
-              <Spinner size={100} />
-          </div>
-          <div style={{display: !isOutputSpinnerVisible? 'block': 'none'}}>
-          <Editor data={svgContent} />
-          </div>
-        </Card>
-      </div>
       <div className="padding-1rme row container">
         <div className="col-6-l col-12">
           <h4>Settings</h4>
@@ -279,6 +282,7 @@ function App() {
           onDragOver={handleDragOver}
         >
           <div>
+            <img src={image} className={cx(s.image)} style={{position: 'relative'}} width="100px"/>
             <h6>Drop your .png or .jpg file here!</h6>
             <ButtonGroup fill={true}>
               <FileInput text="Choose file..." onInputChange={onFileChange} />
@@ -292,6 +296,7 @@ function App() {
           </div>
         </div>
       </div>
+      {getEditorBlock()}
     </div>
   );
 }

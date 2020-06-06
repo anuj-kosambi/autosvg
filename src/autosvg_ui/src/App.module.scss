@@ -1,12 +1,5 @@
 .mainContainer {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  justify-content: center;
   padding: 2rem;
-  :first-child {
-    flex: 1;
-  }
 }
 
 .card {
@@ -31,4 +24,9 @@
   position: absolute;
   top: calc(50% - 50px);
   left: calc(50% - 50px);
+}
+
+.outputContainer {
+  margin-top: 15px;
+  min-height: 400px;
 }

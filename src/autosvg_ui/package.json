@@ -18,7 +18,9 @@
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
+    "react-designer": "^1.1.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
     "react-scripts": "3.4.1",
     "typescript": "~3.7.2"
   },
@@ -42,5 +44,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-export-default-from": "^7.10.1",
+    "babel-plugin-css-modules-transform": "^1.6.2",
+    "babel-plugin-webpack-loaders": "^0.9.0"
   }
 }

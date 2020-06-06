@@ -3,8 +3,18 @@ project(autosvg-cli)
 
 set(CMAKE_CXX_STANDARD 11)
 
-get_filename_component(opencv_base_dir ../../third_party/opencv ABSOLUTE)
-get_filename_component(numcpp_dir ../../third_party/NumCpp ABSOLUTE)
+IF (DEFINED ENV{OPENCV_SDK})
+ELSE ()
+    set(ENV{OPENCV_SDK} '../../third_party/opencv')
+ENDIF ()
+
+IF (DEFINED ENV{NUMCPP})
+ELSE ()
+    set(ENV{NUMCPP} '../../third_party/numcpp')
+ENDIF ()
+
+get_filename_component(opencv_base_dir $ENV{OPENCV_SDK}} ABSOLUTE)
+get_filename_component(numcpp_dir $ENV{NUMCPP} ABSOLUTE)
 
 file(GLOB opencv_include_modules "${opencv_base_dir}/modules/*/include")
 file(GLOB_RECURSE autosvg-cli-executable "../cpp/AutosvgCLI.cpp" "../cpp/*/*.cpp")
@@ -32,11 +42,11 @@ target_link_libraries(autosvg-cli ${opencv_libs})
 
 include(ExternalProject)
 ExternalProject_Add(cxxopts
-  GIT_REPOSITORY    https://github.com/jarro2783/cxxopts 
-  GIT_TAG           master
-  SOURCE_DIR        "${CMAKE_BINARY_DIR}/cxxopts-src"
-  BINARY_DIR        "${CMAKE_BINARY_DIR}/cxxopts-build"
-)
+        GIT_REPOSITORY https://github.com/jarro2783/cxxopts
+        GIT_TAG master
+        SOURCE_DIR "${CMAKE_BINARY_DIR}/cxxopts-src"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/cxxopts-build"
+        )
 
 
 set(COMPILE_FLAGS "-Wno-missing-prototypes")

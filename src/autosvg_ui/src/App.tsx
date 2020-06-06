@@ -250,7 +250,7 @@ function App() {
             <Label>Details</Label>
             <Slider
               min={2}
-              max={6}
+              max={16}
               stepSize={1}
               labelStepSize={1}
               onChange={handleKColorChange}

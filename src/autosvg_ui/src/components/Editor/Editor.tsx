@@ -30,8 +30,8 @@ const Editor: React.ComponentType<{
   console.log(data);
   return (
     <Designer
-      width={data?.height}
-      height={data?.width}
+      width={data?.width}
+      height={data?.height}
       background={"#444"}
       objects={objects}
       onUpdate={handleUpdate}

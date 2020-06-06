@@ -227,7 +227,11 @@ function App() {
   }
 
   function getEditorBlock() {
+    if (svgContent === null && !isOutputSpinnerVisible) return;
+    let editor;
     if (svgContent !== null) {
+        editor = <Editor data={svgContent} />
+    }
       return (
         <div className={cx("row", s.outputContainer)}>
             <Card elevation={Elevation.TWO} className={cx("col-12", s.card)}>
@@ -236,12 +240,11 @@ function App() {
                   <Spinner size={100} />
               </div>
               <div style={{display: !isOutputSpinnerVisible? 'block': 'none'}}>
-                  <Editor data={svgContent} />
+                  {editor}
               </div>
             </Card>
         </div>
       );
-    }
   }
 
   return (

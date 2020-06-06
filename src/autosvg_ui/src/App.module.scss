@@ -26,3 +26,9 @@
   border: "2px dashed";
   border-radius: "10px";
 }
+
+.loaderWrapper {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+}

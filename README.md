@@ -1,6 +1,6 @@
 # AutoSvg
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Autosvg is tracing tool, which can convert image format like (jpg,png,gif) into vector svg.
@@ -96,12 +96,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="http://www.cwithabhas.com"><img src="https://avatars3.githubusercontent.com/u/3436431?v=4" width="60px;" alt=""/><br /><sub><b>Abhas Tandon</b></sub></a><br /><a href="https://github.com/anuj-kosambi/autosvg/commits?author=abhas9" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.cwithabhas.com"><img src="https://avatars3.githubusercontent.com/u/3436431?v=4?s=60" width="60px;" alt=""/><br /><sub><b>Abhas Tandon</b></sub></a><br /><a href="https://github.com/anuj-kosambi/autosvg/commits?author=abhas9" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/prasoonhari"><img src="https://avatars.githubusercontent.com/u/6725550?v=4?s=60" width="60px;" alt=""/><br /><sub><b>Prasoon</b></sub></a><br /><a href="https://github.com/anuj-kosambi/autosvg/commits?author=prasoonhari" title="Code">💻</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

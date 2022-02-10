@@ -15,7 +15,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "classnames": "^2.2.6",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-designer": "^1.1.1",

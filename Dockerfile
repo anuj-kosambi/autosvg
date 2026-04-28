@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip \
         python-is-python3 \
         libboost-all-dev \
+        libopencv-dev \
+        libcxxopts-dev \
+        pkg-config \
         ca-certificates \
         xz-utils \
         nodejs \
@@ -100,6 +103,31 @@ cmake -DCMAKE_TOOLCHAIN_FILE="${EMSDK}/upstream/emscripten/cmake/Modules/Platfor
 make -j"$(nproc)"
 EOF
 
-RUN chmod +x build.sh build-slim.sh
+# Native CLI build — separate from the WASM build. Uses system opencv
+# and cxxopts (apt-installed). Shares Operations.cpp / CurveUtils.cpp
+# with the WASM target; NumCpp is already vendored via submodule init.
+COPY <<'EOF' /src/autosvg/build-cli.sh
+#!/bin/bash
+set -euo pipefail
+
+cd /src/autosvg
+
+g++ -std=c++17 -O2 \
+    -D_LIBCPP_ENABLE_CXX17_REMOVED_BINDERS \
+    -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION \
+    -Wno-deprecated-declarations \
+    -I src/cpp \
+    -I third_party/NumCpp/include \
+    src/cpp/AutosvgCLI.cpp \
+    src/cpp/core/Operations.cpp \
+    src/cpp/utils/CurveUtils.cpp \
+    $(pkg-config --cflags --libs opencv4) \
+    -o autosvg
+
+echo "Built: $(pwd)/autosvg"
+./autosvg --help || true
+EOF
+
+RUN chmod +x build.sh build-slim.sh build-cli.sh
 
 CMD ["bash", "build-slim.sh"]

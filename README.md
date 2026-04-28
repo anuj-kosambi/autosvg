@@ -39,6 +39,37 @@ on the host. Copy them into the UI app:
 cp out/autosvg-wasm.* src/autosvg_ui/public/
 ```
 
+##### Native CLI build (also via Docker)
+
+The image also contains a `build-cli.sh` that produces a native
+`autosvg` binary (uses system OpenCV + cxxopts, no emscripten).
+
+```bash
+mkdir -p out
+docker run --rm -v "$PWD/out:/src/autosvg/out" autosvg \
+  bash -c "bash build-cli.sh && cp autosvg /src/autosvg/out/"
+```
+
+Run the CLI inside the container against an input image:
+
+```bash
+docker run --rm \
+  -v "$PWD/assets:/in:ro" \
+  -v "$PWD/out:/out" \
+  autosvg \
+  bash -c "bash build-cli.sh && ./autosvg -i /in/test_images/test23.png -o /out/test23.svg"
+```
+
+Flags (per `src/cpp/AutosvgCLI.cpp`):
+
+```
+-i, --input        Input filename (png/jpg)
+-o, --output       Output SVG filename (default: out.svg)
+-k, --colors       Number of dominant colors (default: 3)
+-s, --smoothness   Curve smoothness index (default: 5)
+-h, --help         Print usage
+```
+
 ##### Optional: time the build and log exit code
 
 ```bash

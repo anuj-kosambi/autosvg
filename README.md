@@ -17,7 +17,59 @@ You can check your result here (Live Demo)[https://autosvg.now.sh].
 
 ### Building AutoSVG-WASM.js
 
-#### Prerequisite
+#### Option 1: Docker (recommended)
+
+Builds a slim WASM artifact in a reproducible Ubuntu 22.04 environment. No
+host-side dependencies beyond Docker — the image installs cmake, boost,
+emscripten, and a trimmed OpenCV WASM build internally.
+
+```bash
+# from the repo root
+DOCKER_BUILDKIT=1 docker build -t autosvg .
+
+mkdir -p out
+docker run --rm -v "$PWD/out:/src/autosvg/out" autosvg \
+  bash -c "bash build-slim.sh && cp autosvg-wasm.* /src/autosvg/out/"
+```
+
+After it finishes, `out/autosvg-wasm.js` and `out/autosvg-wasm.wasm` are
+on the host. Copy them into the UI app:
+
+```bash
+cp out/autosvg-wasm.* src/autosvg_ui/public/
+```
+
+##### Optional: time the build and log exit code
+
+```bash
+{ time docker run --rm -v "$PWD/out:/src/autosvg/out" autosvg \
+    bash -c "bash build-slim.sh && cp autosvg-wasm.* /src/autosvg/out/"; } \
+  > >(tee -a build.log) 2> >(tee -a build.log >&2)
+echo "exit_code=$? finished_at=$(date -Iseconds)" | tee -a build.log
+```
+
+##### What the Dockerfile does differently from `build.sh`
+
+- Re-clones `emsdk` fresh inside the container (the pinned submodule
+  references `emscripten-releases:master`, which was renamed to `main`).
+- Builds only `opencv_core`, `opencv_imgproc`, and `opencv_imgcodecs` —
+  the modules autosvg actually calls — via `build_js.py --config_only` +
+  direct `make` targets. Skips `opencv_js` bindings (they require C++17
+  embind headers which fight with the pinned OpenCV's C++11 sources).
+- Patches `CMakeLists.txt` to C++17 (required by `emscripten/bind.h`) and
+  re-enables `std::binary_function` / `std::bind2nd` via
+  `_LIBCPP_ENABLE_CXX17_REMOVED_*` macros for `underscore.hpp`.
+- Excludes `AutosvgCLI.cpp` from the WASM target — it depends on
+  `cxxopts.hpp` (not vendored) and is irrelevant for WASM output.
+- Symlinks `/usr/include/boost` to `/usr/local/include/boost` so the
+  hardcoded macOS-style include path resolves on Ubuntu.
+
+The on-disk `CMakeLists.txt` is not modified; patches are applied
+in-container at build time.
+
+#### Option 2: Native build
+
+##### Prerequisite
 
 - cmake, boost,  python
 
@@ -26,14 +78,14 @@ You can check your result here (Live Demo)[https://autosvg.now.sh].
 > brew install cmake boost
 ```
 
-#### Automatic Setup 
+##### Automatic Setup 
 ```bash
 > git submodule update --init
 
 > sh build.sh
 ```
 
-#### Manual Setup 
+##### Manual Setup 
 ```bash
 #
 # https://github.com/emscripten-core/emsdk.git

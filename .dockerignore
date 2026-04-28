@@ -1,0 +1,16 @@
+.gitignore
+.nvimlog
+third_party/emsdk
+third_party/opencv
+third_party/NumCpp
+out
+build
+build_wasm
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile
+*.o
+*.a
+autosvg-wasm.js
+autosvg-wasm.wasm

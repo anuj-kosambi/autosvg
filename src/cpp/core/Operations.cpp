@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <utils/underscore.hpp>
 #include <NumCpp.hpp>
+#include <mutex>
 
 #include "Operations.hpp"
 
@@ -67,7 +68,7 @@ namespace pi {
                                       return area > MINIMUM_CONTOUR_AREA &&
                                              area < imageArea * MAXIMUM_CONTOUR_TO_IMAGE_RATIO;
                                   });
-                                  edges->insert(edges->end(), contours.begin(), contours.end());
+                                  { static std::mutex __autosvg_edges_mtx; std::lock_guard<std::mutex> __autosvg_edges_lg(__autosvg_edges_mtx); edges->insert(edges->end(), contours.begin(), contours.end()); }
                                   return;
                               }
         );

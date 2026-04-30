@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AutoSVG demo</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 2rem; max-width: 900px; }
+  h1 { margin: 0 0 .25rem; }
+  p.sub { color: #666; margin-top: 0; }
+  .row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin: 1rem 0; }
+  label { font-size: .9rem; color: #333; }
+  input[type=number] { width: 4rem; }
+  .panes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pane { border: 1px solid #ddd; border-radius: 6px; padding: .75rem; min-height: 300px; }
+  .pane h3 { margin: 0 0 .5rem; font-size: .9rem; color: #555; font-weight: 600; }
+  .pane img, .pane svg { max-width: 100%; height: auto; display: block; }
+  #status { font-size: .9rem; color: #555; }
+  button { padding: .5rem 1rem; font-size: .95rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>AutoSVG demo</h1>
+<p class="sub">Drop an image and trace it to SVG. Powered by your locally-built <code>autosvg-wasm</code>.</p>
+
+<div class="row">
+  <input id="file" type="file" accept="image/*">
+  <label>colors <input id="k" type="number" value="3" min="1" max="16"></label>
+  <label>smoothness <input id="s" type="number" value="5" min="1" max="20"></label>
+  <button id="go" disabled>Trace</button>
+  <span id="status">load an image to begin</span>
+</div>
+
+<div class="panes">
+  <div class="pane"><h3>input</h3><img id="in"></div>
+  <div class="pane"><h3>svg</h3><div id="out"></div></div>
+</div>
+
+<script>
+const fileEl = document.getElementById('file');
+const goEl = document.getElementById('go');
+const statusEl = document.getElementById('status');
+const inImg = document.getElementById('in');
+const outDiv = document.getElementById('out');
+const kEl = document.getElementById('k');
+const sEl = document.getElementById('s');
+
+const worker = new Worker('autosvg-wasm-worker.js');
+worker.onmessage = (e) => {
+  outDiv.innerHTML = e.data.svg;
+  statusEl.textContent = `done — ${(e.data.svg.length/1024).toFixed(1)} KB svg`;
+  goEl.disabled = false;
+};
+
+let pendingImageData = null;
+
+fileEl.addEventListener('change', () => {
+  const f = fileEl.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  inImg.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = inImg.naturalWidth;
+    c.height = inImg.naturalHeight;
+    c.getContext('2d').drawImage(inImg, 0, 0);
+    pendingImageData = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+    goEl.disabled = false;
+    statusEl.textContent = `loaded ${c.width}x${c.height} — click Trace`;
+  };
+  inImg.src = url;
+});
+
+goEl.addEventListener('click', () => {
+  if (!pendingImageData) return;
+  goEl.disabled = true;
+  statusEl.textContent = 'tracing…';
+  outDiv.innerHTML = '';
+  worker.postMessage([pendingImageData, parseInt(kEl.value, 10), parseInt(sEl.value, 10)]);
+});
+</script>
+</body>
+</html>
